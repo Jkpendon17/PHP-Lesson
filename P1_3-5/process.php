@@ -1,7 +1,7 @@
 <?php 
 include "conn.php";
 
-//
+//Insert query
 if(isset($_POST['reg'])){
 
 $id_num = $_POST['id_num'];
@@ -25,22 +25,31 @@ $check = mysqli_query($conn,
     }
  }
 }
-//Delete account
-if(isset($_GET['del_acc'])){
-    $acc_id = $_GET['id'];
-    
-    $delete = mysqli_query($conn,"DELETE FROM students WHERE id='$acc_id'");
-    
-    if($delete){
-       ?>
+//admin Login
+if(isset($_POST['admin_login'])){
+    $admin_email = mysqli_real_escape_string($conn,$_POST['admin_email']);
+    $admin_pass = mysqli_real_escape_string($conn,$_POST['admin_pass']);
+
+    //query for login
+    $login = mysqli_query($conn,"SELECT * FROM admin WHERE email ='$admin_email' AND password ='$admin_pass'");
+    if($login-> num_rows>=1){
+        $_SESSION['email'] = $admin_email;
+?>
+<script>
+    alert("Login Success");
+    location.href ='index.php';
+</script>
+<?php
+
+    }else{
+        ?>
         <script>
-            alert("Account deleted successfully");
-            location.href="view.php";
+            alert("Wrong email or Password");
+            location.href ='login.php';
         </script>
-       <?php
+        <?php
     }
-
+    
 }
-
 
 ?>
